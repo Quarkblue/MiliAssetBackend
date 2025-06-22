@@ -1,0 +1,124 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  COMMANDER
+  LOGISTICS
+}
+
+enum EquipmentType {
+  WEAPON
+  VEHICLE
+  AMMUNITION
+  MEDICAL
+  COMMUNICATION
+  OTHER
+}
+
+model Base {
+  id            Int           @id @default(autoincrement())
+  name          String        @unique
+  users         User[]
+  personnels    Personnel[]
+  assignments   Assignment[]
+  expenditures  Expenditure[]
+  transfersFrom Transfer[]    @relation("BaseTransferFrom")
+  transfersTo   Transfer[]    @relation("BaseTransferTo")
+  purchases     Purchase[]
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  role     Role
+  baseId   Int
+  base     Base   @relation(fields: [baseId], references: [id])
+  logs     Log[]
+}
+
+model Personnel {
+  id           Int           @id @default(autoincrement())
+  name         String
+  baseId       Int
+  base         Base          @relation(fields: [baseId], references: [id])
+  assignments  Assignment[]
+  expenditures Expenditure[]
+}
+
+model Asset {
+  id            Int           @id @default(autoincrement())
+  name          String
+  equipmentType EquipmentType
+  purchases     Purchase[]
+  transfersIn   Transfer[]    @relation("AssetTransferTo")
+  transfersOut  Transfer[]    @relation("AssetTransferFrom")
+  assignments   Assignment[]
+  expenditures  Expenditure[]
+}
+
+model Purchase {
+  id       Int      @id @default(autoincrement())
+  assetId  Int
+  baseId   Int
+  quantity Int
+  date     DateTime @default(now())
+  asset    Asset    @relation(fields: [assetId], references: [id])
+  base     Base     @relation(fields: [baseId], references: [id])
+}
+
+model Transfer {
+  id         Int      @id @default(autoincrement())
+  assetId    Int
+  fromBaseId Int
+  toBaseId   Int
+  quantity   Int
+  date       DateTime @default(now())
+  asset      Asset    @relation("AssetTransferFrom", fields: [assetId], references: [id])
+  assetTo    Asset    @relation("AssetTransferTo", fields: [assetId], references: [id])
+  fromBase   Base     @relation("BaseTransferFrom", fields: [fromBaseId], references: [id])
+  toBase     Base     @relation("BaseTransferTo", fields: [toBaseId], references: [id])
+}
+
+model Assignment {
+  id          Int       @id @default(autoincrement())
+  assetId     Int
+  baseId      Int
+  personnelId Int
+  quantity    Int
+  date        DateTime  @default(now())
+  asset       Asset     @relation(fields: [assetId], references: [id])
+  base        Base      @relation(fields: [baseId], references: [id])
+  personnel   Personnel @relation(fields: [personnelId], references: [id])
+}
+
+model Expenditure {
+  id          Int       @id @default(autoincrement())
+  assetId     Int
+  baseId      Int
+  personnelId Int
+  quantity    Int
+  date        DateTime  @default(now())
+  asset       Asset     @relation(fields: [assetId], references: [id])
+  base        Base      @relation(fields: [baseId], references: [id])
+  personnel   Personnel @relation(fields: [personnelId], references: [id])
+}
+
+model Log {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  action    String
+  details   String
+  timestamp DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}

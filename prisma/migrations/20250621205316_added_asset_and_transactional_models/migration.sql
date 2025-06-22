@@ -1,0 +1,65 @@
+-- CreateTable
+CREATE TABLE "Personnel" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL,
+    "baseId" INTEGER NOT NULL,
+    CONSTRAINT "Personnel_baseId_fkey" FOREIGN KEY ("baseId") REFERENCES "Base" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "Asset" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL,
+    "equipmentType" TEXT NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "Purchase" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "assetId" INTEGER NOT NULL,
+    "baseId" INTEGER NOT NULL,
+    "quantity" INTEGER NOT NULL,
+    "date" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Purchase_assetId_fkey" FOREIGN KEY ("assetId") REFERENCES "Asset" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "Purchase_baseId_fkey" FOREIGN KEY ("baseId") REFERENCES "Base" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "Transfer" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "assetId" INTEGER NOT NULL,
+    "fromBaseId" INTEGER NOT NULL,
+    "toBaseId" INTEGER NOT NULL,
+    "quantity" INTEGER NOT NULL,
+    "date" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Transfer_assetId_fkey" FOREIGN KEY ("assetId") REFERENCES "Asset" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "Transfer_assetId_fkey" FOREIGN KEY ("assetId") REFERENCES "Asset" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "Transfer_fromBaseId_fkey" FOREIGN KEY ("fromBaseId") REFERENCES "Base" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "Transfer_toBaseId_fkey" FOREIGN KEY ("toBaseId") REFERENCES "Base" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "Assignment" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "assetId" INTEGER NOT NULL,
+    "baseId" INTEGER NOT NULL,
+    "personnelId" INTEGER NOT NULL,
+    "quantity" INTEGER NOT NULL,
+    "date" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Assignment_assetId_fkey" FOREIGN KEY ("assetId") REFERENCES "Asset" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "Assignment_baseId_fkey" FOREIGN KEY ("baseId") REFERENCES "Base" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "Assignment_personnelId_fkey" FOREIGN KEY ("personnelId") REFERENCES "Personnel" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "Expenditure" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "assetId" INTEGER NOT NULL,
+    "baseId" INTEGER NOT NULL,
+    "personnelId" INTEGER NOT NULL,
+    "quantity" INTEGER NOT NULL,
+    "date" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Expenditure_assetId_fkey" FOREIGN KEY ("assetId") REFERENCES "Asset" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "Expenditure_baseId_fkey" FOREIGN KEY ("baseId") REFERENCES "Base" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "Expenditure_personnelId_fkey" FOREIGN KEY ("personnelId") REFERENCES "Personnel" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
