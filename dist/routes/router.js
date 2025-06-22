@@ -1,0 +1,24 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const hc_1 = require("../controllers/hc");
+const auth_routes_1 = __importDefault(require("./auth.routes"));
+const dashboard_routes_1 = __importDefault(require("./dashboard.routes"));
+const purchase_routes_1 = __importDefault(require("./purchase.routes"));
+const transfer_routes_1 = __importDefault(require("./transfer.routes"));
+const assignment_routes_1 = __importDefault(require("./assignment.routes"));
+const expenditure_routes_1 = __importDefault(require("./expenditure.routes"));
+const filterData_routes_1 = __importDefault(require("./filterData.routes"));
+const router = (0, express_1.Router)();
+router.get("/hc", hc_1.healthCheck);
+router.use("/auth", auth_routes_1.default);
+router.use("/dashboard", dashboard_routes_1.default);
+router.use("/purchases", purchase_routes_1.default);
+router.use("/transfers", transfer_routes_1.default);
+router.use("/assignments", assignment_routes_1.default);
+router.use("/expenditures", expenditure_routes_1.default);
+router.use("/filter-data", filterData_routes_1.default);
+exports.default = router;

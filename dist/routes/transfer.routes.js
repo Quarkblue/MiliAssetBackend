@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const auth_middleware_1 = require("../middleware/auth.middleware");
+const auth_middleware_2 = require("../middleware/auth.middleware");
+const roles_1 = require("../constants/roles");
+const transfer_controller_1 = require("../controllers/transfer.controller");
+const router = (0, express_1.Router)();
+router.post('/', auth_middleware_1.authenticateToken, (0, auth_middleware_2.authorizeRoles)(roles_1.Role.ADMIN, roles_1.Role.COMMANDER, roles_1.Role.LOGISTICS), transfer_controller_1.createTransfer);
+router.get('/', auth_middleware_1.authenticateToken, transfer_controller_1.getTransfers);
+exports.default = router;
