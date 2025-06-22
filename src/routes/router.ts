@@ -7,6 +7,7 @@ import transferRoutes from "./transfer.routes";
 import assignmentRoutes from "./assignment.routes";
 import expenditureRoutes from "./expenditure.routes";
 import filterDataRoutes from "./filterData.routes";
+import logsRoutes from "./logs.routes";
 
 const router = Router();
 
@@ -19,5 +20,6 @@ router.use("/transfers", transferRoutes);
 router.use("/assignments", assignmentRoutes);
 router.use("/expenditures", expenditureRoutes);
 router.use("/filter-data", filterDataRoutes);
+router.use("/logs", logsRoutes)
 
 export default router;
